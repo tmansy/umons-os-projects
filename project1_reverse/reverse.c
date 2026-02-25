@@ -2,7 +2,7 @@
  * Project: Reverse
  * 
  * Group Number : 4
- * Students     : MANSY Théo
+ * Students     : ARTOIS Victor et MANSY Théo
  * 
  * gcc -Wall -Werror -O2 reverse.c -o reverse
  * ./reverse OR ./reverse input.txt OR ./reverse input.txt output.txt
@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 typedef struct {
     char **lines;
@@ -25,6 +26,21 @@ int main(int argc, char *argv[]) {
         
         if (!inputFile || !outputFile) {
             fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
+            exit(1);
+        }
+
+        struct stat s_input, s_output;
+
+        if (fstat(fileno(inputFile), &s_input) != 0 ||
+            fstat(fileno(outputFile), &s_output) != 0) {
+            perror("fstat");
+            exit(1);
+        }
+
+        if (s_input.st_ino == s_output.st_ino && s_input.st_dev == s_output.st_dev) {
+            fprintf(stderr, "error: input and output file must differ\n");
+            fclose(inputFile);
+            fclose(outputFile);
             exit(1);
         }
 
