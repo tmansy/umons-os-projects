@@ -24,24 +24,30 @@ int main(int argc, char *argv[]) {
         FILE *inputFile = fopen(argv[1], "r");
         FILE *outputFile = fopen(argv[2], "w");
         
-        if (!inputFile || !outputFile) {
+        if (argc == 2 && !inputFile) {
             fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
             exit(1);
         }
 
-        struct stat s_input, s_output;
-
-        if (fstat(fileno(inputFile), &s_input) != 0 ||
-            fstat(fileno(outputFile), &s_output) != 0) {
-            perror("fstat");
+        if (argc == 3 && !outputFile) {
+            fprintf(stderr, "error: cannot open file '%s'\n", argv[2]);
             exit(1);
         }
 
-        if (s_input.st_ino == s_output.st_ino && s_input.st_dev == s_output.st_dev) {
-            fprintf(stderr, "error: input and output file must differ\n");
-            fclose(inputFile);
-            fclose(outputFile);
-            exit(1);
+        if (inputFile && outputFile) {
+            struct stat s_input, s_output;
+
+            if (fstat(fileno(inputFile), &s_input) != 0 || fstat(fileno(outputFile), &s_output) != 0) {
+                fprintf(stderr, "error: pstat\n");
+                exit(1);
+            }
+
+            if (s_input.st_ino == s_output.st_ino && s_input.st_dev == s_output.st_dev) {
+                fprintf(stderr, "error: input and output file must differ\n");
+                fclose(inputFile);
+                fclose(outputFile);
+                exit(1);
+            }
         }
 
         char *line = NULL;
@@ -49,6 +55,7 @@ int main(int argc, char *argv[]) {
         LineArray array = {NULL, 0, 0};
 
         while (getline(&line, &len, inputFile) != -1) {
+            // Allocation dynamique avec malloc
             if (array.count == array.capacity) {
                 size_t new_capacity = (array.capacity == 0) ? 1 : array.capacity * 2;
                 char **new_lines = malloc(new_capacity * sizeof(char *));
