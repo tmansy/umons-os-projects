@@ -2,10 +2,15 @@
  * Project: Reverse
  * 
  * Group Number : 4
- * Students     : ARTOIS Victor et MANSY Théo (264194)
+ * Students     : ARTOIS Victor (Matricule ?) et MANSY Théo (Matricule 264194)
  * 
+ * Compile with :
  * gcc -Wall -Werror -O2 reverse.c -o reverse
- * ./reverse OR ./reverse input.txt OR ./reverse input.txt output.txt
+ * 
+ * Run with : 
+ * ./reverse
+ * ./reverse input.txt
+ * ./reverse input.txt output.txt
  ***********************************************/
 
 #include <stdio.h>
@@ -68,7 +73,6 @@ int main(int argc, char *argv[]) {
     LineArray array = {NULL, 0, 0};
 
     while (getline(&line, &len, input) != -1) {
-        // Allocation dynamique avec malloc
         if (array.count == array.capacity) {
             size_t new_capacity = (array.capacity == 0) ? 1 : array.capacity * 2;
             char **new_lines = malloc(new_capacity * sizeof(char *));
