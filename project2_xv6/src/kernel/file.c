@@ -18,11 +18,14 @@ struct {
   struct spinlock lock;
   struct file file[NFILE];
 } ftable;
+extern struct spinlock readcount_lock;
+
 
 void
 fileinit(void)
 {
   initlock(&ftable.lock, "ftable");
+  initlock(&readcount_lock, "readcount");
 }
 
 // Allocate a file structure.
