@@ -7,6 +7,9 @@
 #include "proc.h"
 #include "vm.h"
 
+extern int readcount;
+extern struct spinlock readcount_lock;
+
 uint64
 sys_exit(void)
 {
@@ -106,4 +109,16 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+uint64
+sys_getreadcount(void)
+{
+  int count;
+
+  acquire(&readcount_lock);
+  count = readcount;
+  release(&readcount_lock);
+
+  return count;
 }

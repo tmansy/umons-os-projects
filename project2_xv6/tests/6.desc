@@ -1,0 +1,6 @@
+Test of getfilenum() on a child opened with fork.
+Uses pipes for synchronization -> careful that pipes open two files each!
+
+!!! Technically, this test could fail if a new process is created with the same
+pid as the child right after the child is killed but before the parent
+queries its filenum (though unlikely).

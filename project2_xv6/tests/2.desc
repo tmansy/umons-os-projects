@@ -1,0 +1,2 @@
+Concurrency test; multiple processes access the counter concurrently.
+Use locks!

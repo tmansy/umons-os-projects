@@ -4,6 +4,8 @@
 #include "riscv.h"
 #include "defs.h"
 
+extern struct spinlock readcount_lock;
+
 volatile static int started = 0;
 
 // start() jumps here in supervisor mode on all CPUs.
@@ -30,6 +32,7 @@ main()
     virtio_disk_init(); // emulated hard disk
     userinit();      // first user process
     __sync_synchronize();
+    initlock(&readcount_lock, "readcount");
     started = 1;
   } else {
     while(started == 0)

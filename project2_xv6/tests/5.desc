@@ -1,0 +1,2 @@
+More involved test of getfilenum() on a process itself (make a "hole" in
+the descriptor table).
