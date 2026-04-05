@@ -107,3 +107,33 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_getfilenum(void)
+{
+  int pid;
+  argint(0, &pid);
+
+  struct proc *p;
+  extern struct proc proc[];
+
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+
+    if(p->state != UNUSED && p->pid == pid){
+      int count = 0;
+      
+      for(int fd = 0; fd < NOFILE; fd++){
+        if(p->ofile[fd] != 0)
+          count++;
+      }
+
+      release(&p->lock);
+      return count;
+    }
+    
+    release(&p->lock);
+  }
+
+  return -1;
+}
