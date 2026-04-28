@@ -5,7 +5,7 @@
  * Groupe n°4
  * 
  * Compile with :
- * gcc -Wall -Werror -O2 psort.c -o psort
+ * gcc -Wall -Werror -pthread -O2 psort.c -o psort
  *
  * Run with : 
  * ./psort input output nb_threads
